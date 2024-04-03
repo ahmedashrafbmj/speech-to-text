@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcription App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #startButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        #startButton:hover {
+            background-color: #0056b3;
+        }
+
+        #transcriptionResults {
+            text-align: left;
+        }
+
+        #transcriptionResults p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Transcription App</h1>
+        <button id="startButton">Start Transcription</button>
+        <div id="transcriptionResults"></div>
+    </div>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', async function() {
+            const response = await fetch('/start_transcription', { method: 'POST' });
+            const data = await response.json();
+            console.log(data);
+        });
+
+        // JavaScript to update transcription results
+        async function fetchTranscriptionResults() {
+            const response = await fetch('/get_transcription_results');
+            const data = await response.json();
+            console.log(typeof data.transcription,"data.transcriptiondata.transcription")
+            const transcriptionDiv = document.getElementById('transcriptionResults');
+            if(data.transcription !== ""){
+                transcriptionDiv.innerHTML += '<p>' + data.transcription + '</p>';
+
+            }
+        }
+
+        // Fetch transcription results periodically
+        setInterval(fetchTranscriptionResults, 3000); // Update every 3 seconds
+    </script>
+</body>
+</html>
